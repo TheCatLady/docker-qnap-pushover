@@ -4,6 +4,7 @@ This project allows system notifications to be send to pushover. It runs in a do
 # Installation
 
 Log via SSH into your NAS (which has docker/Container station installed).
+
     cd /tmp
     wget https://github.com/vincentcox/QNAP-pushover/archive/master.zip 
     unzip master.zip
