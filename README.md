@@ -23,6 +23,3 @@ LOG_TYPE:
 - -1: everything (not recommended)
 - 0: warnings and errors
 - 1: errors only
-
-# Support
-This is smashed together.
