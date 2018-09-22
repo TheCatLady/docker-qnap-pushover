@@ -1,6 +1,10 @@
 # QNAP-pushover
 This project allows system notifications to be send to pushover. It runs in a docker container.
 
+<img src="notification.png" alt="notification" width="200px">
+
+
+
 # Installation
 
 Log via SSH into your NAS (which has docker/Container station installed).
@@ -21,4 +25,4 @@ LOG_TYPE:
 - 1: errors only
 
 # Support
-This is smashed together, I won't provide active support for this repo. Only pull request will be reviewed.
+This is smashed together.
