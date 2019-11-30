@@ -20,6 +20,7 @@ CURRENT_EVENT_ID = 0 # Init value
 LATEST_EVENT_ID = 0 # Init value
 
 init(TOKEN) # Init Pushover
+Client(USER_KEY).send_message("Starting QNAP Pushover Server...")
 event_log = os.path.join(os.path.curdir, 'event.log') # The event_log needs to be mapped via docker: -v /etc/logs/event.log:event.log
 
 conn = sqlite3.connect(event_log) # The event.log is not a log file, it's a SQL3lite database. QNAP and their logic...
