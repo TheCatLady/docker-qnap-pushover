@@ -20,10 +20,13 @@ Or from docker-compose:
         restart: unless-stopped
         volumes:
           - /etc/logs/event.log:/event.log
+          - /etc/logs/conn.log:/conn.log
+          - /etc/logs/notice.log:/notice.log
         environment:
           - LOG_TYPE=0 
           - TOKEN=XXXXXX
           - USER_KEY=YYYYYYYY
+          - POLL_INTERVAL=10
 
 Adding the following line to the environment stanza will resend the last 10 messages
 
