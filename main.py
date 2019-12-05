@@ -2,6 +2,7 @@ import sqlite3, os.path, time, os
 from pushover import init, Client
 DB_NAME = ["NASLOG_EVENT", "NASLOG_CONN", "NASLOG_NOTICE"]
 DB_FILENAME = ["event.log", "conn.log", "notice.log"]
+event_id=["event_id", "conn_id", "id"]
 try:
     LOG_TYPE = int(os.environ['LOG_TYPE'])
 except:
@@ -36,7 +37,7 @@ for k in range(0,2):
         conn[k] = sqlite3.connect(log[k]) # The event.log is not a log file, it's a SQL3lite database. QNAP and their logic...
         # At beginning program get the latest event_id. We don't want pushover to sent the entire event.log DB to our phone. Only the events starting from now.
         cursor = conn[k].cursor()
-        cursor.execute("SELECT * FROM "+DB_NAME[k]+" ORDER BY event_id DESC LIMIT 1;")
+        cursor.execute("SELECT * FROM "+DB_NAME[k]+" ORDER BY "+event_id[k]+" DESC LIMIT 1;")
         LATEST_EVENT_ID[k] = cursor.fetchone()[0]
         if (TESTING == True):
             LATEST_EVENT_ID[k] = LATEST_EVENT_ID[k] -10
@@ -50,7 +51,7 @@ while True:
             pass
         else:
             cursor = conn[j].cursor()
-            cursor.execute("SELECT * FROM "+DB_NAME[j]+" ORDER BY event_id DESC LIMIT 1;")
+            cursor.execute("SELECT * FROM "+DB_NAME[j]+" ORDER BY "+event_id[k]+" DESC LIMIT 1;")
             CURRENT_EVENT_ID[j] = cursor.fetchone()[0]
 
             if (CURRENT_EVENT_ID[j] != LATEST_EVENT_ID[j]):
@@ -63,7 +64,7 @@ while True:
                     # print(i)
                     cursor = conn[j].cursor()
                     cursor.execute(
-                        "SELECT * FROM " + DB_NAME[j] + " where event_id="+str(LATEST_EVENT_ID[j]-i)+";")
+                        "SELECT * FROM " + DB_NAME[j] + " where "+event_id[k]+"="+str(LATEST_EVENT_ID[j]-i)+";")
                     event = cursor.fetchone()
                     if event[1] > LOG_TYPE:
                         # print(event[7])
