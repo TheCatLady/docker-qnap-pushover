@@ -27,8 +27,8 @@ LATEST_EVENT_ID = [0, 0, 0] # Init value
 init(TOKEN) # Init Pushover
 Client(USER_KEY).send_message("Starting QNAP Pushover Server...")
 
-log = []
-conn = []
+log = [None, None, None]
+conn = [None, None, None]
 
 for k in range(0,2):
     if os.path.isfile(DB_FILENAME[k]):
