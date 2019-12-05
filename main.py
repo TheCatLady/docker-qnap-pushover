@@ -51,7 +51,7 @@ while True:
             pass
         else:
             cursor = conn[j].cursor()
-            cursor.execute("SELECT * FROM "+DB_NAME[j]+" ORDER BY "+event_id[k]+" DESC LIMIT 1;")
+            cursor.execute("SELECT * FROM "+DB_NAME[j]+" ORDER BY "+event_id[j]+" DESC LIMIT 1;")
             CURRENT_EVENT_ID[j] = cursor.fetchone()[0]
 
             if (CURRENT_EVENT_ID[j] != LATEST_EVENT_ID[j]):
@@ -64,7 +64,7 @@ while True:
                     # print(i)
                     cursor = conn[j].cursor()
                     cursor.execute(
-                        "SELECT * FROM " + DB_NAME[j] + " where "+event_id[k]+"="+str(LATEST_EVENT_ID[j]-i)+";")
+                        "SELECT * FROM " + DB_NAME[j] + " where "+event_id[j]+"="+str(LATEST_EVENT_ID[j]-i)+";")
                     event = cursor.fetchone()
                     if event[1] > LOG_TYPE:
                         # print(event[7])
