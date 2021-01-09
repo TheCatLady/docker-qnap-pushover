@@ -1,53 +1,101 @@
-# QNAP-pushover
-This project allows system notifications to be send to pushover. It runs in a docker container.
+# `qnap-pushover` 🔔
 
-<img src="https://raw.githubusercontent.com/vincentcox/QNAP-pushover/master/notification.png" alt="notification" width="200px">
+[![Python](https://img.shields.io/github/languages/top/TheCatLady/docker-qnap-pushover?logo=python&style=for-the-badge)](https://github.com/TheCatLady/docker-qnap-pushover) [![Docker Image Size](https://img.shields.io/docker/image-size/dorish/qnap-pushover/latest?style=for-the-badge&logo=docker)](https://hub.docker.com/r/dorish/qnap-pushover) [![Docker Pulls](https://img.shields.io/docker/pulls/dorish/qnap-pushover?style=for-the-badge&logo=docker)](https://hub.docker.com/r/dorish/qnap-pushover) [![Docker Stars](https://img.shields.io/docker/stars/dorish/qnap-pushover?style=for-the-badge&logo=docker)](https://hub.docker.com/r/dorish/qnap-pushover) [![GitHub Stars](https://img.shields.io/github/stars/TheCatLady/docker-qnap-pushover?label=GitHub%20Stars&logo=github&style=for-the-badge)](https://github.com/TheCatLady/docker-qnap-pushover/stargazers) [![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/dorish/qnap-pushover?logo=docker&style=for-the-badge)](https://hub.docker.com/r/dorish/qnap-pushover) [![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/dorish/qnap-pushover?style=for-the-badge&logo=docker)](https://hub.docker.com/r/dorish/qnap-pushover) [![GitHub Last Commit](https://img.shields.io/github/last-commit/TheCatLady/docker-qnap-pushover?style=for-the-badge&logo=github)](https://github.com/TheCatLady/docker-qnap-pushover) [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=for-the-badge&logo=git)](https://github.com/TheCatLady/docker-qnap-pushover) [![License](https://img.shields.io/github/license/TheCatLady/docker-qnap-pushover?style=for-the-badge)](https://github.com/TheCatLady/docker-qnap-pushover/blob/master/LICENSE)
 
-# Docker Hub Installation
+[Pushover](https://pushover.net/) notifications for [QNAP](https://www.qnap.com/) NAS system events via `python-pushover`
 
-From the command line:
+## Usage
 
-    docker run -d --rm -e LOG_TYPE="0" -e TOKEN="XXXXXX" -e USER_KEY="YYYYYYYY" -v /etc/logs/event.log:/event.log mtlott/qnap-pushover qnap-pushover
+### Docker Compose (recommended)
 
-Or from docker-compose:
+```yaml
+---
+version: "2.1"
+volumes:
+  qnap-pushover:
+services:
+  qnap-pushover:
+    image: dorish/qnap-pushover
+    container_name: qnap-pushover
+    environment:
+      - TZ=America/New_York #optional
+      - LOG_LEVEL=WARN #optional
+      - POLL_INTERVAL=10 #optional
+      - INCLUDE= #optional
+      - EXCLUDE= #optional
+      - TESTING_MODE=false #optional
+      - PUSHOVER_TOKEN=<Pushover application API token>
+      - PUSHOVER_RECIPIENT=<Pushover user and/or group key(s)>
+    volumes:
+      - qnap-pushover:/data
+      - /etc/logs/event.log:/event.log:ro
+    restart: always
+```
 
-    version: "2"
+### Docker CLI
 
-    services:
-      pushover:
-        container_name: qnap-pushover
-        image: mtlott/qnap-pushover:latest
-        restart: unless-stopped
-        volumes:
-          - /etc/logs/event.log:/event.log
-          - /etc/logs/conn.log:/conn.log
-          - /etc/logs/notice.log:/notice.log
-        environment:
-          - LOG_TYPE=0 
-          - TOKEN=XXXXXX
-          - USER_KEY=YYYYYYYY
-          - POLL_INTERVAL=10
+```bash
+docker volume create qnap-pushover
+docker run -d \
+  --name=qnap-pushover \
+  -e TZ=America/New_York `#optional` \
+  -e LOG_LEVEL=WARN `#optional` \
+  -e POLL_INTERVAL=10 `#optional` \
+  -e INCLUDE= `#optional` \
+  -e EXCLUDE= `#optional` \
+  -e TESTING_MODE=false `#optional` \
+  -e PUSHOVER_TOKEN=<Pushover application API token> \
+  -e PUSHOVER_RECIPIENT=<Pushover user and/or group key(s)> \
+  -v qnap-pushover:/data \
+  -v /etc/logs/event.log:/event.log:ro \
+  --restart always \
+  dorish/qnap-pushover
+```
 
-Adding the following line to the environment stanza will resend the last 10 messages
+## Parameters
 
-          - TESTING=True
+The container image is configured using the following parameters passed at runtime:
 
+|Parameter|Function|Default Value|Required?|
+|---|---|---|---|
+|`-e TZ=`|[TZ database name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) of NAS time zone; e.g., `America/New_York`||no|
+|`-e LOG_LEVEL=`|Minimum log level to send a notification; `INFO` < `WARN` < `ERROR`|`WARN`|no|
+|`-e POLL_INTERVAL=`|Poll interval in seconds|`10`|no|
+|`-e INCLUDE=`|List of keywords which must be present in the event description to trigger a notification (comma-delimited)||no|
+|`-e EXCLUDE=`|List of keywords which must _not_ be present in the event description to trigger a notification (comma-delimited)||no|
+|`-e TESTING_MODE=`|Testing mode (`true` or `false`); if set to `true`, will re-queue the last 10 system log events at container start|`false`|no|
+|`-e PUSHOVER_TOKEN=`|[Pushover application API token](https://pushover.net/api#registration); e.g., `azGDORePK8gMaC0QOYAMyEEuzJnyUi`||**yes**|
+|`-e PUSHOVER_RECIPIENT=`|[Pushover user and/or group key(s)](https://pushover.net/api#identifiers); e.g., `uQiRzpo4DXghDmr9QzzfQu27cmVRsG` or `gznej3rKEVAvPUxu9vvNnqpmZpokzF` (up to 50, comma-delimited)||**yes**|
+|`-v qnap-pushover:/data`|Container data volume||**yes**|
+|`-v /etc/logs/event.log:/event.log:ro`|QNAP event logs (mounted as read-only)||**yes**|
+|`--restart`|Container [restart policy](https://docs.docker.com/engine/reference/run/#restart-policies---restart) (`always` or `unless-stopped` recommended)|`no`|no|
 
-# Local Installation
+## Building Locally
 
-Log via SSH into your NAS (which has docker/Container station installed).
+If you would like to make modifications to the code, you can build the Docker image locally instead of pulling the image available on Docker Hub.
 
-    cd /tmp
-    wget https://github.com/vincentcox/QNAP-pushover/archive/master.zip 
-    unzip master.zip
-    cd QNAP-pushover-master/
-    # (QNAP has no package manager...)
+```bash
+git clone https://github.com/TheCatLady/docker-qnap-pushover.git
+cd docker-qnap-pushover
+docker build \
+  --no-cache \
+  --pull \
+  -t qnap-pushover
+docker volume create qnap-pushover
+docker run -d \
+  --name=qnap-pushover \
+  -e TZ=America/New_York `#optional` \
+  -e LOG_LEVEL=WARN `#optional` \
+  -e POLL_INTERVAL=10 `#optional` \
+  -e TESTING_MODE=false `#optional` \
+  -e PUSHOVER_TOKEN=<Pushover application API token> \
+  -e PUSHOVER_RECIPIENT=<Pushover user and/or group key(s)> \
+  -v qnap-pushover:/data \
+  -v /etc/logs/event.log:/event.log:ro \
+  --restart always \
+  qnap-pushover
+```
 
-    docker build . -t qnap-pushover
+## Sponsors
 
-    docker run -d --rm -e LOG_TYPE="0" -e TOKEN="XXXXXX" -e USER_KEY="YYYYYYYY" -v /etc/logs/event.log:/event.log --name "QNAP-Pushover" qnap-pushover
-
-LOG_TYPE:
-- -1: everything (not recommended)
-- 0: warnings and errors
-- 1: errors only
+If you appreciate my work, please consider [becoming a sponsor](https://github.com/sponsors/TheCatLady) or [making a one-time donation](http://paypal.me/DHoung)! 💖
