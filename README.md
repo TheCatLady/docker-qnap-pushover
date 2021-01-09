@@ -1,4 +1,4 @@
-# `qnap-pushover` 🔔
+# `qnap-pushover` :bell:
 
 [![Python](https://img.shields.io/github/languages/top/TheCatLady/docker-qnap-pushover?logo=python&style=for-the-badge)](https://github.com/TheCatLady/docker-qnap-pushover) [![Docker Image Size](https://img.shields.io/docker/image-size/dorish/qnap-pushover/latest?style=for-the-badge&logo=docker)](https://hub.docker.com/r/dorish/qnap-pushover) [![Docker Pulls](https://img.shields.io/docker/pulls/dorish/qnap-pushover?style=for-the-badge&logo=docker)](https://hub.docker.com/r/dorish/qnap-pushover) [![Docker Stars](https://img.shields.io/docker/stars/dorish/qnap-pushover?style=for-the-badge&logo=docker)](https://hub.docker.com/r/dorish/qnap-pushover) [![GitHub Stars](https://img.shields.io/github/stars/TheCatLady/docker-qnap-pushover?label=GitHub%20Stars&logo=github&style=for-the-badge)](https://github.com/TheCatLady/docker-qnap-pushover/stargazers) [![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/dorish/qnap-pushover?logo=docker&style=for-the-badge)](https://hub.docker.com/r/dorish/qnap-pushover) [![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/dorish/qnap-pushover?style=for-the-badge&logo=docker)](https://hub.docker.com/r/dorish/qnap-pushover) [![GitHub Last Commit](https://img.shields.io/github/last-commit/TheCatLady/docker-qnap-pushover?style=for-the-badge&logo=github)](https://github.com/TheCatLady/docker-qnap-pushover) [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=for-the-badge&logo=git)](https://github.com/TheCatLady/docker-qnap-pushover) [![License](https://img.shields.io/github/license/TheCatLady/docker-qnap-pushover?style=for-the-badge)](https://github.com/TheCatLady/docker-qnap-pushover/blob/master/LICENSE)
 
@@ -98,4 +98,4 @@ docker run -d \
 
 ## Sponsors
 
-If you appreciate my work, please consider [becoming a sponsor](https://github.com/sponsors/TheCatLady) or [making a one-time donation](http://paypal.me/DHoung)! 💖
+If you appreciate my work, please consider [becoming a sponsor](https://github.com/sponsors/TheCatLady) or [making a one-time donation](http://paypal.me/DHoung)! :sparkling_heart:

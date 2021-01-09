@@ -15,16 +15,17 @@ TIME_COL = "event_time"
 USER_COL = "event_user"
 IP_COL = "event_ip"
 COLOR = ["grey", "#ffc311", "#ca414b"]
-
 INFO = f" - INFO: "
 WARNING = f" - WARNING: "
 ERROR = f" - ERROR: "
 
 # Banner
-print(''' _,         _,                     ,  |)    _        _  ,_  
-/ |  /|/|  / |  |/\_----|/\_|  |  / \_|/\  / \_|  |_|/ /  | 
+print(''' _,         _,                     ,  |)    _        _  ,_
+/ |  /|/|  / |  |/\_----|/\_|  |  / \_|/\  / \_|  |_|/ /  |
 \/|_/ | |_/\/|_/|_/     |_/  \/|_/ \/ |  |/\_/  \/  |_/   |/
-  |)           (|      (|''')
+  |)           (|      (|
+https://github.com/TheCatLady/docker-qnap-pushover
+''')
 
 try:
     if "info" in os.environ['LOG_LEVEL'].lower():
@@ -54,7 +55,7 @@ finally:
     print(f"{time.asctime()}{INFO}Poll interval is set to {POLL_INTERVAL} seconds.")
 
 try:
-    INCLUDE = os.environ['INCLUDE'].lower().split(',')
+    INCLUDE = os.environ['INCLUDE'].strip(",").lower().split(',')
 except:
     INCLUDE = []
 finally:
@@ -64,7 +65,7 @@ finally:
         print(f"{time.asctime()}{INFO}INCLUDE environment was not set or is invalid.")
 
 try:
-    EXCLUDE = os.environ['EXCLUDE'].lower().split(',')
+    EXCLUDE = os.environ['EXCLUDE'].strip(",").lower().split(',')
 except:
     EXCLUDE = []
 finally:
@@ -74,7 +75,7 @@ finally:
         print(f"{time.asctime()}{INFO}EXCLUDE environment was not set or is invalid.")
 
 try:
-    TESTING_MODE = bool(os.getenv('TESTING_MODE', 'False').lower() in ['true', '1'])
+    TESTING_MODE = bool(os.getenv('TESTING_MODE', 'false').lower() in ['true', '1'])
 except:
     TESTING_MODE = False
 finally:
@@ -86,9 +87,6 @@ try:
     PUSHOVER_RECIPIENT = os.environ['PUSHOVER_RECIPIENT']
     pushover_client = pushover.Client(PUSHOVER_RECIPIENT, api_token=PUSHOVER_TOKEN)
     print(f"{time.asctime()}{INFO}Using Pushover application API token {PUSHOVER_TOKEN} and recipient user/group key(s) {PUSHOVER_RECIPIENT}.")
-    
-    newest_event_id = 0
-    last_event_id = 0
 
     log_path = os.path.abspath(DB_FILE)
     event_id_path = os.path.abspath(os.path.join("data", EVENT_ID_FILE))
@@ -113,7 +111,6 @@ try:
             last_event_id -= 10 # for testing, re-queue the previous 10 events
             print(f"{time.asctime()}{INFO}Testing mode is enabled. Re-queuing last 10 system log events for processing.")
     else:
-        db_conn = None
         raise Exception(f"Unable to open {DB_FILE}. Was the log file mounted to the container?")
 
     while True:
@@ -130,7 +127,6 @@ try:
                     cursor = db_conn.cursor()
                     cursor.execute(f"SELECT {TYPE_COL}, {DESC_COL}, {DATE_COL}, {TIME_COL}, {USER_COL}, {IP_COL} FROM {DB_NAME} WHERE {ID_COL}={last_event_id + 1 + i};")
                     event = cursor.fetchone()
-
                     event_type = event[0]
                     event_desc = event[1]
                     event_datetime = f"{event[2]} {event[3]}"
@@ -142,35 +138,33 @@ try:
                         hasExcluded = False
 
                         for keyword in INCLUDE:
-                            if keyword in event_desc.lower():
+                            if keyword.strip() in event_desc.lower():
                                 hasIncluded = True
-                                print(f"{time.asctime()}{INFO}Found required keyword {keyword} in the event description.")
                                 break
 
                         if len(INCLUDE) == 0:
                             hasIncluded = True
 
                         for keyword in EXCLUDE:
-                            if keyword in event_desc.lower():
+                            if keyword.strip() in event_desc.lower():
                                 hasExcluded = True
-                                print(f"{time.asctime()}{INFO}Found excluded keyword {keyword} in the event description.")
                                 break
 
                         if hasIncluded and not hasExcluded:
                             if ']' in event_desc:
                                 title = event_desc[1 : event_desc.find(']')]
-                                message = event_desc[event_desc.find(']') + 2 :].rstrip(".,;")
+                                message = event_desc[event_desc.find(']') + 2 :].rstrip(".,; ")
                             else:
-                                title = ""
+                                title = "System"
                                 message = event_desc
 
                             if ". " in message:
                                 s = message.find(". ")
                                 message_segments = message.split('. ')
                                 message = f"<font color=\"{COLOR[event_type]}\"><b>{message[: s]}</b></font><small><br/>";
-
                                 prev = ""
                                 first_line = True
+
                                 for s in message_segments:
                                     if prev != "":
                                         if '"' in s:
@@ -203,10 +197,7 @@ try:
                             timestamp = int(time.mktime(time.strptime(event_datetime, "%Y-%m-%d %H:%M:%S")))
                             priority = event_type - 1
 
-                            if title != "":
-                                answer = pushover_client.send_message(message, html=1, priority=priority, timestamp=timestamp, title=title).answer
-                            else:
-                                answer = pushover_client.send_message(message, html=1, priority=priority, timestamp=timestamp).answer
+                            answer = pushover_client.send_message(message, html=1, priority=priority, timestamp=timestamp, title=title).answer
 
                             if answer["status"] != 1:
                                 time.sleep(5) # wait an extra 5 seconds
@@ -224,7 +215,7 @@ try:
                 last_event_id += i
                 print(f"{time.asctime()}{WARNING}{e.strerror} " \
                       f"Only {i} of {new_event_count} new system log events were processed successfully. " \
-                      f"Re-queuing the remaining {new_event_count - i} events.")
+                      f"Re-queuing the remaining {new_event_count - i} unprocessed events.")
         else:
             print(f"{time.asctime()}{INFO}No new system log events detected in {DB_FILE}.")
 
