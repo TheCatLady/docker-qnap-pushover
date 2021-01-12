@@ -18,7 +18,7 @@ on:
     # The branches below must be a subset of the branches above
     branches: [ main ]
   schedule:
-    - cron: '31 2 * * 4'
+    - cron: '15 18 * * 4'
 
 jobs:
   analyze:
@@ -53,7 +53,7 @@ jobs:
       uses: github/codeql-action/autobuild@v1
 
     # ‚ÑπÔ∏è Command-line programs to run using the OS shell.
-    # Ì†ΩÌ≥ö https://git.io/JvXDl
+    # üìö https://git.io/JvXDl
 
     # ‚úèÔ∏è If the Autobuild fails above, remove it and uncomment the following three lines
     #    and modify them (or add more) to build your code if your project
