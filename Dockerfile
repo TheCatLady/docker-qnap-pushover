@@ -1,8 +1,9 @@
-FROM python:3-alpine
+FROM python:alpine
 
-ADD main.py /
-ADD requirements.txt /
+COPY requirements.txt /
 
 RUN pip install -r requirements.txt
+
+COPY main.py /
 
 ENTRYPOINT ["python", "-u", "/main.py"]

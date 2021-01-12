@@ -20,6 +20,7 @@ services:
     environment:
       - TZ=America/New_York #optional
       - LOG_LEVEL=WARN #optional
+      - NOTIFY_LEVEL=WARN #optional
       - POLL_INTERVAL=10 #optional
       - INCLUDE= #optional
       - EXCLUDE= #optional
@@ -40,6 +41,7 @@ docker run -d \
   --name=qnap-pushover \
   -e TZ=America/New_York `#optional` \
   -e LOG_LEVEL=WARN `#optional` \
+  -e NOTIFY_LEVEL=WARN `#optional` \
   -e POLL_INTERVAL=10 `#optional` \
   -e INCLUDE= `#optional` \
   -e EXCLUDE= `#optional` \
@@ -59,7 +61,8 @@ The container image is configured using the following parameters passed at runti
 |Parameter|Function|Default Value|Required?|
 |---|---|---|---|
 |`-e TZ=`|[TZ database name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) of NAS time zone; e.g., `America/New_York`||no|
-|`-e LOG_LEVEL=`|Minimum log level to send a notification; `INFO` < `WARN` < `ERROR`|`WARN`|no|
+|`-e LOG_LEVEL=`|Container logging level; `DEBUG` < `INFO` < `WARN` < `ERROR` < `CRITICAL`|`WARN`|no|
+|`-e NOTIFY_LEVEL=`|Minimum system event type to generate a notification; `INFO` < `WARN` < `ERROR`|`WARN`|no|
 |`-e POLL_INTERVAL=`|Poll interval in seconds|`10`|no|
 |`-e INCLUDE=`|List of keywords which must be present in the event description to trigger a notification (comma-delimited)||no|
 |`-e EXCLUDE=`|List of keywords which must _not_ be present in the event description to trigger a notification (comma-delimited)||no|
@@ -72,7 +75,7 @@ The container image is configured using the following parameters passed at runti
 
 ## Building Locally
 
-If you would like to make modifications to the code, you can build the Docker image locally instead of pulling the image available on Docker Hub.
+If you would like to make modifications to the code, you can build the Docker image yourself instead of pulling the [image available on Docker Hub](https://hub.docker.com/r/thecatlady/qnap-pushover).
 
 ```bash
 git clone https://github.com/TheCatLady/docker-qnap-pushover.git
@@ -80,12 +83,13 @@ cd docker-qnap-pushover
 docker build \
   --no-cache \
   --pull \
-  -t qnap-pushover
+  -t thecatlady/qnap-pushover .
 docker volume create qnap-pushover
 docker run -d \
   --name=qnap-pushover \
   -e TZ=America/New_York `#optional` \
   -e LOG_LEVEL=WARN `#optional` \
+  -e NOTIFY_LEVEL=WARN `#optional` \
   -e POLL_INTERVAL=10 `#optional` \
   -e TESTING_MODE=false `#optional` \
   -e PUSHOVER_TOKEN=<Pushover application API token> \
@@ -93,7 +97,7 @@ docker run -d \
   -v qnap-pushover:/data \
   -v /etc/logs/event.log:/event.log:ro \
   --restart always \
-  qnap-pushover
+  thecatlady/qnap-pushover
 ```
 
 ## How to Contribute
