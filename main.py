@@ -2,6 +2,7 @@ import logging
 import os
 import os.path
 import pushover
+import re
 import sqlite3
 import time
 
@@ -181,25 +182,19 @@ try:
                                 first_line = True
 
                                 for s in message_segments:
-                                    if prev != "":
-                                        if '"' in s:
-                                            if first_line:
-                                                message = f"<font color=\"{COLOR[event_type]}\"><b>{prev}{s}</b></font><small>";
-                                                first_line = False
-                                            else:
-                                                message += f"<br/>{prev}{s}"
-                                            prev = ""
+                                    quotes += len(re.findall('"', s))
+
+                                    if quotes % 2 == 0:
+                                        if first_line:
+                                            message = f"<font color=\"{COLOR[event_type]}\"><b>{prev}{s}</b></font><small>";
+                                            first_line = False
                                         else:
-                                            prev += s
+                                            message += f"<br/>{prev}{s}"
+
+                                        prev = ""
+                                        quotes = 0
                                     else:
-                                        if '"' in s:
-                                            prev = s
-                                        else:
-                                            if first_line:
-                                                message = f"<font color=\"{COLOR[event_type]}\"><b>{s}</b></font><small>";
-                                                first_line = False
-                                            else:
-                                                message += f"<br/>{s}"
+                                        prev += s
                             else:
                                 message = f"<font color=\"{COLOR[event_type]}\"><b>{message}</b></font><small>"
 

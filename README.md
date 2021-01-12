@@ -1,10 +1,23 @@
-# `qnap-pushover` :bell:
+# `qnap-pushover` &#x1F514;
 
-[![Python](https://img.shields.io/github/languages/top/TheCatLady/docker-qnap-pushover?logo=python&style=for-the-badge)](https://github.com/TheCatLady/docker-qnap-pushover) [![Docker Image Size](https://img.shields.io/docker/image-size/thecatlady/qnap-pushover/latest?style=for-the-badge&logo=docker)](https://hub.docker.com/r/thecatlady/qnap-pushover) [![Docker Pulls](https://img.shields.io/docker/pulls/thecatlady/qnap-pushover?style=for-the-badge&logo=docker)](https://hub.docker.com/r/thecatlady/qnap-pushover) [![Docker Stars](https://img.shields.io/docker/stars/thecatlady/qnap-pushover?style=for-the-badge&logo=docker)](https://hub.docker.com/r/thecatlady/qnap-pushover) [![GitHub Stars](https://img.shields.io/github/stars/TheCatLady/docker-qnap-pushover?label=GitHub%20Stars&logo=github&style=for-the-badge)](https://github.com/TheCatLady/docker-qnap-pushover/stargazers) [![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/thecatlady/qnap-pushover?logo=docker&style=for-the-badge)](https://hub.docker.com/r/thecatlady/qnap-pushover) [![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/thecatlady/qnap-pushover?style=for-the-badge&logo=docker)](https://hub.docker.com/r/thecatlady/qnap-pushover) [![GitHub Last Commit](https://img.shields.io/github/last-commit/TheCatLady/docker-qnap-pushover?style=for-the-badge&logo=github)](https://github.com/TheCatLady/docker-qnap-pushover) [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=for-the-badge&logo=git)](https://github.com/TheCatLady/docker-qnap-pushover) [![License](https://img.shields.io/github/license/TheCatLady/docker-qnap-pushover?style=for-the-badge)](https://github.com/TheCatLady/docker-qnap-pushover/blob/main/LICENSE)
+[![Python](https://img.shields.io/github/languages/top/TheCatLady/docker-qnap-pushover?logo=python&style=flat-square)](https://github.com/TheCatLady/docker-qnap-pushover)
+[![Docker Image Size](https://img.shields.io/docker/image-size/thecatlady/qnap-pushover/latest?style=flat-square&logo=docker&label=docker%20image%20size)](https://hub.docker.com/r/thecatlady/qnap-pushover)
+[![Docker Hub Pulls](https://img.shields.io/docker/pulls/thecatlady/qnap-pushover?style=flat-square&label=docker%20hub%20pulls&logo=docker)](https://hub.docker.com/r/thecatlady/qnap-pushover)
+[![GitHub Repo Stars](https://img.shields.io/github/stars/TheCatLady/docker-qnap-pushover?label=github%20stars&logo=github&style=flat-square)](https://github.com/TheCatLady/docker-qnap-pushover/stargazers)<br/>
+[![Last Commit](https://img.shields.io/github/last-commit/TheCatLady/docker-qnap-pushover?style=flat-square&logo=git)](https://github.com/TheCatLady/docker-qnap-pushover)
+[![GitHub Container Registry Build Status](https://img.shields.io/github/workflow/status/TheCatLady/docker-qnap-pushover/Docker?label=github%20container%20registry%20build&logo=github&style=flat-square)](https://github.com/TheCatLady/docker-qnap-pushover)
+[![Docker Hub Build Status](https://img.shields.io/docker/cloud/build/thecatlady/qnap-pushover?style=flat-square&label=docker%20hub%20build&logo=docker)](https://hub.docker.com/r/thecatlady/qnap-pushover)<br/>
+[![License](https://img.shields.io/github/license/TheCatLady/docker-qnap-pushover?logo=open%20source%20initiative&style=flat-square)](https://github.com/TheCatLady/docker-qnap-pushover/blob/main/LICENSE)
+[![Become a GitHub Sponsor](https://img.shields.io/badge/github%20sponsors-become%20a%20sponsor-ff69b4?style=flat-square&logo=github%20sponsors)](https://github.com/sponsors/TheCatLady)
+[![Donate via PayPal](https://img.shields.io/badge/paypal-make%20a%20donation-blue?style=flat-square&logo=paypal)](http://paypal.me/DHoung)
 
 [Pushover](https://pushover.net/) notifications for [QNAP](https://www.qnap.com/) NAS system events via `python-pushover`
 
 ## Usage
+
+Docker images are available from both [GitHub Container Registry (GHCR)](https://github.com/users/TheCatLady/packages/container/package/qnap-pushover) and [Docker Hub](https://hub.docker.com/r/thecatlady/qnap-pushover).
+
+If you would prefer to pull from GHCR, simply replace `thecatlady/qnap-pushover` with `ghcr.io/thecatlady/qnap-pushover` in the examples below.
 
 ### Docker Compose (recommended)
 
@@ -75,7 +88,7 @@ The container image is configured using the following parameters passed at runti
 
 ## Building Locally
 
-If you would like to make modifications to the code, you can build the Docker image yourself instead of pulling the [image available on Docker Hub](https://hub.docker.com/r/thecatlady/qnap-pushover).
+If you would like to make modifications to the code, you can build the Docker image yourself instead of pulling the pre-built image available from [GitHub Container Registry (GHCR)](https://github.com/users/TheCatLady/packages/container/package/qnap-pushover) or [Docker Hub](https://hub.docker.com/r/thecatlady/qnap-pushover).
 
 ```bash
 git clone https://github.com/TheCatLady/docker-qnap-pushover.git
@@ -102,6 +115,6 @@ docker run -d \
 
 ## How to Contribute
 
-Show your support by starring this project! :star2:  Pull requests, bug reports, and feature requests are also welcome!
+Show your support by starring this project! &#x1F31F;  Pull requests, bug reports, and feature requests are also welcome!
 
-You can also support me by [becoming a GitHub sponsor](https://github.com/sponsors/TheCatLady) or [making a one-time PayPal donation](http://paypal.me/DHoung) :sparkling_heart:
+You can also support me by [becoming a GitHub sponsor](https://github.com/sponsors/TheCatLady) or [making a one-time PayPal donation](http://paypal.me/DHoung) &#x1F496;
