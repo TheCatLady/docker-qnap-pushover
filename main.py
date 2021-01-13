@@ -71,24 +71,24 @@ finally:
     logging.info(f"Poll interval is set to {POLL_INTERVAL} seconds.")
 
 try:
-    INCLUDE = os.environ['INCLUDE'].strip(",").lower().split(',')
+    INCLUDE = list(filter(str.strip, os.environ['INCLUDE'].lower().split(',')))
 except:
     INCLUDE = []
 finally:
     if len(INCLUDE) > 0:
         logging.info(f"Only system log events containing the following keywords will trigger notifications: {', '.join(INCLUDE)}")
     else:
-        logging.info("INCLUDE environment was not set or is invalid.")
+        logging.info("INCLUDE keyword filter is not set.")
 
 try:
-    EXCLUDE = os.environ['EXCLUDE'].strip(",").lower().split(',')
+    EXCLUDE = list(filter(str.strip, os.environ['EXCLUDE'].lower().split(',')))
 except:
     EXCLUDE = []
 finally:
     if len(EXCLUDE) > 0:
         logging.info(f"System log events containing the following keywords will not trigger notifications: {', '.join(EXCLUDE)}")
     else:
-        logging.info("EXCLUDE environment was not set or is invalid.")
+        logging.info("EXCLUDE keyword filter is not set.")
 
 try:
     TESTING_MODE = bool(os.getenv('TESTING_MODE', 'false').lower() in ['true', '1'])
@@ -159,13 +159,17 @@ try:
                             hasIncluded = True
                         else:
                             for keyword in INCLUDE:
-                                if keyword.strip() in event_desc.lower():
+                                if keyword in event_desc.lower():
                                     hasIncluded = True
                                     break
 
+                        if hasIncluded == False:
+                            logging.debug(f"Skipping system log event because it does not contain at least one INCLUDE keyword: {INCLUDE}")
+
                         for keyword in EXCLUDE:
-                            if keyword.strip() in event_desc.lower():
+                            if keyword in event_desc.lower():
                                 hasExcluded = True
+                                logging.debug(f"Skipping system log event because it contains an EXCLUDE keyword: {keyword}")
                                 break
 
                         if hasIncluded and not hasExcluded:
