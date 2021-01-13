@@ -21,9 +21,9 @@ If you would prefer to pull from GHCR, simply replace `thecatlady/qnap-pushover`
 
 ### Docker Compose (recommended)
 
+Add the following volume and service definitions to a `docker-compose.yaml` file:
+
 ```yaml
----
-version: "2.1"
 volumes:
   qnap-pushover:
 services:
@@ -46,10 +46,31 @@ services:
     restart: always
 ```
 
+Then, run the following command from the directory containing your `docker-compose.yaml` file:
+
+```bash
+docker-compose up -d
+```
+
+To update the container when a new image is available, run the following:
+
+```bash
+docker-compose pull qnap-pushover
+docker-compose up -d
+docker image prune
+```
+
 ### Docker CLI
+
+Run the following command to create the required named volume:
 
 ```bash
 docker volume create qnap-pushover
+```
+
+Then, run the following command to create the container:
+
+```bash
 docker run -d \
   --name=qnap-pushover \
   -e TZ=America/New_York `#optional` \
@@ -65,6 +86,15 @@ docker run -d \
   -v /etc/logs/event.log:/event.log:ro \
   --restart always \
   thecatlady/qnap-pushover
+```
+
+To update the container when a new image is available, run the commands below followed by your `docker run` command:
+
+```bash
+docker stop qnap-pushover
+docker rm qnap-pushover
+docker pull thecatlady/qnap-pushover
+docker image prune
 ```
 
 ## Parameters

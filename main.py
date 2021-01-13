@@ -55,13 +55,13 @@ except:
 finally:
     if NOTIFY_TYPE == 0:
         logging.info("NOTIFY_LEVEL is set to INFO. " \
-              "All system log events will trigger notifications.")
+              "Sending notifications for INFO, WARN, and ERROR system log events (all event types).")
     elif NOTIFY_TYPE == 1:
         logging.info("NOTIFY_LEVEL is set to WARN. " \
-              "Only WARN and ERROR system log events will trigger notifications; INFO events will not trigger notifications.")
+              "Sending notifications only for WARN and ERROR system log events; INFO events will not trigger notifications.")
     else:
         logging.info("NOTIFY_LEVEL is set to ERROR. " \
-              "ONLY ERROR system log events will not trigger notifications; INFO and WARN events will not trigger notifications.")
+              "Sending notifications only for ERROR system log events; INFO and WARN events will not trigger notifications.")
 
 try:
     POLL_INTERVAL = int(os.environ['POLL_INTERVAL'])
@@ -91,7 +91,7 @@ finally:
         logging.info("EXCLUDE keyword filter is not set.")
 
 try:
-    TESTING_MODE = bool(os.getenv('TESTING_MODE', 'false').lower() in ['true', '1'])
+    TESTING_MODE = bool(os.getenv('TESTING_MODE', 'false').lower().strip() in ['true', '1'])
 except:
     TESTING_MODE = False
 finally:
@@ -101,8 +101,8 @@ finally:
         logging.info("Testing mode is not enabled.")
 
 try:
-    PUSHOVER_TOKEN = os.environ['PUSHOVER_TOKEN']
-    PUSHOVER_RECIPIENT = os.environ['PUSHOVER_RECIPIENT']
+    PUSHOVER_TOKEN = os.environ['PUSHOVER_TOKEN'].strip()
+    PUSHOVER_RECIPIENT = ''.join(os.environ['PUSHOVER_RECIPIENT'].split())
     pushover_client = pushover.Client(PUSHOVER_RECIPIENT, api_token=PUSHOVER_TOKEN)
     logging.info(f"Using Pushover application API token {PUSHOVER_TOKEN} and recipient user/group key(s) {PUSHOVER_RECIPIENT}.")
 
@@ -181,11 +181,11 @@ try:
                                 message = event_desc
 
                             if ". " in message:
-                                message_segments = message.split('. ')
-                                prev = ""
                                 first_line = True
+                                prev = ""
+                                quotes = 0
 
-                                for s in message_segments:
+                                for s in message.split('. '):
                                     quotes += len(re.findall('"', s))
 
                                     if quotes % 2 == 0:
@@ -198,7 +198,7 @@ try:
                                         prev = ""
                                         quotes = 0
                                     else:
-                                        prev += s
+                                        prev += f"{s}. "
                             else:
                                 message = f"<font color=\"{COLOR[event_type]}\"><b>{message}</b></font><small>"
 
@@ -221,9 +221,10 @@ try:
                             timestamp = int(time.mktime(time.strptime(event_datetime, "%Y-%m-%d %H:%M:%S")))
                             priority = event_type - 1
 
-                            answer = pushover_client.send_message(message, html=1, priority=priority, timestamp=timestamp, title=title).answer
+                            pushover_answer = pushover_client.send_message(message, html=1, priority=priority, timestamp=timestamp, title=title).answer
+                            logging.debug(f"Pushover API response: {pushover_answer}")
 
-                            if answer["status"] != 1:
+                            if pushover_answer["status"] != 1:
                                 time.sleep(5) # wait an extra 5 seconds
                                 raise Exception("Unable to connect to Pushover API.")
 
@@ -237,7 +238,7 @@ try:
                       f"Skipping the current event and re-queuing the remaining {new_event_count - i} unprocessed events.")
             except Exception as e:
                 last_event_id += i
-                logging.warning(f"{e.strerror} " \
+                logging.warning(f"{e}. " \
                       f"Only {i} of {new_event_count} new system log events were processed successfully. " \
                       f"Re-queuing the remaining {new_event_count - i} unprocessed events.")
         else:
@@ -252,4 +253,4 @@ try:
 except (pushover.InitError, pushover.UserError):
     logging.critical(f"Pushover application API token and recipient must be set.")
 except Exception as e:
-    logging.critical(f"{e}")
+    logging.critical(f"{e}.")
