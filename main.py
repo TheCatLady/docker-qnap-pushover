@@ -6,17 +6,18 @@ import re
 import sqlite3
 import time
 
-EVENT_ID_FILE = "last_event_id.txt"
-DB_FILE = "event.log"
-DB_NAME = "NASLOG_EVENT"
-ID_COL = "event_id"
-TYPE_COL = "event_type"
-DESC_COL = "event_desc"
-DATE_COL = "event_date"
-TIME_COL = "event_time"
-USER_COL = "event_user"
-IP_COL = "event_ip"
-COLOR = ["grey", "#ffc311", "#ca414b"]
+EVENT_LOG_PATH = "/event.log"
+EVENT_ID_PATH = "/data/last_event_id.txt"
+FONT_COLOR = ["grey", "#ffc311", "#ca414b"]
+
+LOGGING_LEVEL = {
+    'critical': logging.CRITICAL,
+    'error': logging.ERROR,
+    'warn': logging.WARNING,
+    'warning': logging.WARNING,
+    'info': logging.INFO,
+    'debug': logging.DEBUG
+}
 
 # Banner
 print('''
@@ -27,16 +28,7 @@ print('''
 https://github.com/TheCatLady/docker-qnap-pushover
 ''')
 
-LOGGING_LEVELS = {
-    'critical': logging.CRITICAL,
-    'error': logging.ERROR,
-    'warn': logging.WARNING,
-    'warning': logging.WARNING,
-    'info': logging.INFO,
-    'debug': logging.DEBUG
-}
-
-logging_level = LOGGING_LEVELS.get(os.environ['LOG_LEVEL'].lower())
+logging_level = LOGGING_LEVEL.get(os.environ['LOG_LEVEL'].lower())
 
 if logging_level is None:
     logging_level = logging.WARNING
@@ -50,7 +42,7 @@ try:
         NOTIFY_TYPE = 1
     else:
         NOTIFY_TYPE = 2
-except:
+except Exception:
     NOTIFY_TYPE = 1
 finally:
     if NOTIFY_TYPE == 0:
@@ -65,14 +57,14 @@ finally:
 
 try:
     POLL_INTERVAL = int(os.environ['POLL_INTERVAL'])
-except:
+except Exception:
     POLL_INTERVAL = 10
 finally:
     logging.info(f"Poll interval is set to {POLL_INTERVAL} seconds.")
 
 try:
     INCLUDE = list(filter(str.strip, os.environ['INCLUDE'].lower().split(',')))
-except:
+except Exception:
     INCLUDE = []
 finally:
     if len(INCLUDE) > 0:
@@ -82,7 +74,7 @@ finally:
 
 try:
     EXCLUDE = list(filter(str.strip, os.environ['EXCLUDE'].lower().split(',')))
-except:
+except Exception:
     EXCLUDE = []
 finally:
     if len(EXCLUDE) > 0:
@@ -92,7 +84,7 @@ finally:
 
 try:
     TESTING_MODE = bool(os.getenv('TESTING_MODE', 'false').lower().strip() in ['true', '1'])
-except:
+except Exception:
     TESTING_MODE = False
 finally:
     if TESTING_MODE:
@@ -106,14 +98,11 @@ try:
     pushover_client = pushover.Client(PUSHOVER_RECIPIENT, api_token=PUSHOVER_TOKEN)
     logging.info(f"Using Pushover application API token {PUSHOVER_TOKEN} and recipient user/group key(s) {PUSHOVER_RECIPIENT}.")
 
-    log_path = os.path.abspath(DB_FILE)
-    event_id_path = os.path.abspath(os.path.join("data", EVENT_ID_FILE))
-
-    if os.path.isfile(log_path):
-        db_conn = sqlite3.connect(log_path) # event.log is not a text file, but a SQLite database
+    if os.path.isfile(EVENT_LOG_PATH):
+        db_conn = sqlite3.connect(EVENT_LOG_PATH) # event.log is not a text file, but a SQLite database
 
         try:
-            with open(event_id_path, "r") as f:
+            with open(EVENT_ID_PATH, "r") as f:
                 last_event_id = int(f.readline()) # read the last-processed event ID from a file if it exists
                 logging.info(f"Read the last-processed event ID from the data file. ({last_event_id})")
         except (FileNotFoundError, ValueError):
@@ -121,7 +110,7 @@ try:
 
         if last_event_id == 0: # set the last-processed event ID to the newest event ID if we weren't able to read it from a file
             cursor = db_conn.cursor()
-            cursor.execute(f"SELECT {ID_COL} FROM {DB_NAME} ORDER BY {ID_COL} DESC LIMIT 1;")
+            cursor.execute(f"SELECT event_id FROM NASLOG_EVENT ORDER BY event_id DESC LIMIT 1;")
             last_event_id = cursor.fetchone()[0]
             logging.info(f"Setting the last-processed event ID to the newest event ID in the database. ({last_event_id})")
 
@@ -129,21 +118,21 @@ try:
             last_event_id -= 10 # for testing, re-queue the previous 10 events
             logging.info("Testing mode is enabled. Re-queuing last 10 system log events for processing.")
     else:
-        raise Exception(f"Unable to open {DB_FILE}. Was the log file mounted to the container?")
+        raise Exception(f"Unable to open {EVENT_LOG_PATH}. Was the log file mounted to the container?")
 
     while True:
         cursor = db_conn.cursor()
-        cursor.execute(f"SELECT {ID_COL} FROM {DB_NAME} ORDER BY {ID_COL} DESC LIMIT 1;")
+        cursor.execute(f"SELECT event_id FROM NASLOG_EVENT ORDER BY event_id DESC LIMIT 1;")
         newest_event_id = cursor.fetchone()[0]
 
         if newest_event_id > last_event_id:
             new_event_count = newest_event_id - last_event_id
-            logging.info(f"{new_event_count} new system log events detected in {DB_FILE}.")
+            logging.info(f"{new_event_count} new system log events detected in {EVENT_LOG_PATH}.")
 
             try:
                 for i in range(new_event_count):
                     cursor = db_conn.cursor()
-                    cursor.execute(f"SELECT {TYPE_COL}, {DESC_COL}, {DATE_COL}, {TIME_COL}, {USER_COL}, {IP_COL} FROM {DB_NAME} WHERE {ID_COL}={last_event_id + 1 + i};")
+                    cursor.execute(f"SELECT event_type, event_desc, event_date, event_time, event_user, event_ip FROM NASLOG_EVENT WHERE event_id={last_event_id + 1 + i};")
                     event = cursor.fetchone()
                     event_type = event[0]
                     event_desc = event[1].strip()
@@ -190,7 +179,7 @@ try:
 
                                     if quotes % 2 == 0:
                                         if first_line:
-                                            message = f"<font color=\"{COLOR[event_type]}\"><b>{prev}{s}</b></font><small>";
+                                            message = f"<font color=\"{FONT_COLOR[event_type]}\"><b>{prev}{s}</b></font><small>";
                                             first_line = False
                                         else:
                                             message += f"<br/>{prev}{s}"
@@ -200,7 +189,7 @@ try:
                                     else:
                                         prev += f"{s}. "
                             else:
-                                message = f"<font color=\"{COLOR[event_type]}\"><b>{message}</b></font><small>"
+                                message = f"<font color=\"{FONT_COLOR[event_type]}\"><b>{message}</b></font><small>"
 
                             message_details = ""
 
@@ -242,9 +231,9 @@ try:
                       f"Only {i} of {new_event_count} new system log events were processed successfully. " \
                       f"Re-queuing the remaining {new_event_count - i} unprocessed events.")
         else:
-            logging.info(f"No new system log events detected in {DB_FILE}.")
+            logging.info(f"No new system log events detected in {EVENT_LOG_PATH}.")
 
-        with open(event_id_path, "w+") as f:
+        with open(EVENT_ID_PATH, "w+") as f:
             f.write(str(last_event_id))
             f.truncate()
             logging.info(f"Wrote the last-processed event ID to the data file. ({last_event_id})")

@@ -1,17 +1,17 @@
 # `qnap-pushover` &#x1F514;
 
-[![Python](https://img.shields.io/github/languages/top/TheCatLady/docker-qnap-pushover?logo=python&style=flat-square)](https://github.com/TheCatLady/docker-qnap-pushover)
-[![Docker Image Size](https://img.shields.io/docker/image-size/thecatlady/qnap-pushover/latest?style=flat-square&logo=docker&label=docker%20image%20size)](https://hub.docker.com/r/thecatlady/qnap-pushover)
-[![Docker Hub Pulls](https://img.shields.io/docker/pulls/thecatlady/qnap-pushover?style=flat-square&label=docker%20hub%20pulls&logo=docker)](https://hub.docker.com/r/thecatlady/qnap-pushover)
-[![GitHub Repo Stars](https://img.shields.io/github/stars/TheCatLady/docker-qnap-pushover?label=github%20stars&logo=github&style=flat-square)](https://github.com/TheCatLady/docker-qnap-pushover/stargazers)<br/>
-[![Last Commit](https://img.shields.io/github/last-commit/TheCatLady/docker-qnap-pushover?style=flat-square&logo=git)](https://github.com/TheCatLady/docker-qnap-pushover)
-[![GitHub Container Registry Build Status](https://img.shields.io/github/workflow/status/TheCatLady/docker-qnap-pushover/Docker?label=github%20container%20registry%20build&logo=github&style=flat-square)](https://github.com/TheCatLady/docker-qnap-pushover)
-[![Docker Hub Build Status](https://img.shields.io/docker/cloud/build/thecatlady/qnap-pushover?style=flat-square&label=docker%20hub%20build&logo=docker)](https://hub.docker.com/r/thecatlady/qnap-pushover)<br/>
-[![License](https://img.shields.io/github/license/TheCatLady/docker-qnap-pushover?logo=open%20source%20initiative&style=flat-square)](https://github.com/TheCatLady/docker-qnap-pushover/blob/main/LICENSE)
+[![Python](https://img.shields.io/github/languages/top/TheCatLady/docker-qnap-pushover?style=flat-square&logoColor=white&logo=python)](https://github.com/TheCatLady/docker-qnap-pushover)
+[![Code Quality](https://img.shields.io/lgtm/grade/python/github/TheCatLady/docker-qnap-pushover?style=flat-square&logoColor=white&logo=lgtm&label=code%20quality)](https://lgtm.com/projects/g/TheCatLady/docker-qnap-pushover/)
+[![Image Size](https://img.shields.io/docker/image-size/thecatlady/qnap-pushover/latest?style=flat-square&logoColor=white&logo=docker&label=image%20size)](https://hub.docker.com/r/thecatlady/qnap-pushover)
+[![Docker Hub Pulls](https://img.shields.io/docker/pulls/thecatlady/qnap-pushover?style=flat-square&logoColor=white&logo=docker&label=docker%20hub%20pulls)](https://hub.docker.com/r/thecatlady/qnap-pushover)<br/>
+[![Last Commit](https://img.shields.io/github/last-commit/TheCatLady/docker-qnap-pushover?style=flat-square&logoColor=white&logo=git)](https://github.com/TheCatLady/docker-qnap-pushover)
+[![GitHub Container Registry Build Status](https://img.shields.io/github/workflow/status/TheCatLady/docker-qnap-pushover/Docker?style=flat-square&logoColor=white&logo=github&label=github%20container%20registry%20build)](https://github.com/TheCatLady/docker-qnap-pushover)
+[![Docker Hub Build Status](https://img.shields.io/docker/cloud/build/thecatlady/qnap-pushover?style=flat-square&logoColor=white&logo=docker&label=docker%20hub%20build)](https://hub.docker.com/r/thecatlady/qnap-pushover)<br/>
+[![License](https://img.shields.io/github/license/TheCatLady/docker-qnap-pushover?style=flat-square&logoColor=white&logo=open%20source%20initiative)](https://github.com/TheCatLady/docker-qnap-pushover/blob/main/LICENSE)
 [![Become a GitHub Sponsor](https://img.shields.io/badge/github%20sponsors-become%20a%20sponsor-ff69b4?style=flat-square&logo=github%20sponsors)](https://github.com/sponsors/TheCatLady)
 [![Donate via PayPal](https://img.shields.io/badge/paypal-make%20a%20donation-blue?style=flat-square&logo=paypal)](http://paypal.me/DHoung)
 
-[Pushover](https://pushover.net/) notifications for [QNAP](https://www.qnap.com/) NAS system events via `python-pushover`
+[Pushover](https://pushover.net/) notifications for [QNAP](https://www.qnap.com/) NAS system events via [`python-pushover`](https://github.com/Thibauth/python-pushover)
 
 ## Usage
 
@@ -21,7 +21,7 @@ If you would prefer to pull from GHCR, simply replace `thecatlady/qnap-pushover`
 
 ### Docker Compose (recommended)
 
-Add the following volume and service definitions to a `docker-compose.yaml` file:
+Add the following volume and service definitions to a `docker-compose.yml` file:
 
 ```yaml
 volumes:
@@ -46,18 +46,10 @@ services:
     restart: always
 ```
 
-Then, run the following command from the directory containing your `docker-compose.yaml` file:
+Then, run the following command from the directory containing your `docker-compose.yml` file:
 
 ```bash
 docker-compose up -d
-```
-
-To update the container when a new image is available, run the following:
-
-```bash
-docker-compose pull qnap-pushover
-docker-compose up -d
-docker image prune
 ```
 
 ### Docker CLI
@@ -88,7 +80,23 @@ docker run -d \
   thecatlady/qnap-pushover
 ```
 
-To update the container when a new image is available, run the commands below followed by your `docker run` command:
+## Updating
+
+The process to update the container when a new image is available is dependent on how you set it up initially.
+
+### Docker Compose
+
+Run the following commands from the directory containing your `docker-compose.yml` file:
+
+```bash
+docker-compose pull qnap-pushover
+docker-compose up -d
+docker image prune
+```
+
+### Docker CLI
+
+Run the commands below, followed by your original `docker run` command:
 
 ```bash
 docker stop qnap-pushover
@@ -107,8 +115,8 @@ The container image is configured using the following parameters passed at runti
 |`-e LOG_LEVEL=`|Container logging level; `DEBUG` < `INFO` < `WARN` < `ERROR` < `CRITICAL`|`WARN`|no|
 |`-e NOTIFY_LEVEL=`|Minimum system event type to generate a notification; `INFO` < `WARN` < `ERROR`|`WARN`|no|
 |`-e POLL_INTERVAL=`|Poll interval in seconds|`10`|no|
-|`-e INCLUDE=`|List of keywords which must be present in the event description to trigger a notification (comma-delimited)||no|
-|`-e EXCLUDE=`|List of keywords which must _not_ be present in the event description to trigger a notification (comma-delimited)||no|
+|`-e INCLUDE=`|List of keywords which _must_ be present in the event description to trigger a notification (comma-delimited)||no|
+|`-e EXCLUDE=`|List of keywords which _must not_ be present in the event description to trigger a notification (comma-delimited)||no|
 |`-e TESTING_MODE=`|Testing mode (`true` or `false`); if set to `true`, will re-queue the last 10 system log events at _every_ container start and result in duplicate notifications|`false`|no|
 |`-e PUSHOVER_TOKEN=`|[Pushover application API token](https://pushover.net/api#registration); e.g., `azGDORePK8gMaC0QOYAMyEEuzJnyUi`||**yes**|
 |`-e PUSHOVER_RECIPIENT=`|[Pushover user and/or group key(s)](https://pushover.net/api#identifiers); e.g., `uQiRzpo4DXghDmr9QzzfQu27cmVRsG` or `gznej3rKEVAvPUxu9vvNnqpmZpokzF` (up to 50, comma-delimited)||**yes**|
@@ -118,30 +126,15 @@ The container image is configured using the following parameters passed at runti
 
 ## Building Locally
 
-If you would like to make modifications to the code, you can build the Docker image yourself instead of pulling the pre-built image available from [GitHub Container Registry (GHCR)](https://github.com/users/TheCatLady/packages/container/package/qnap-pushover) or [Docker Hub](https://hub.docker.com/r/thecatlady/qnap-pushover).
+If you would like to make modifications to the code, you can build the Docker image yourself instead of pulling the pre-built image available from [GitHub Container Registry (GHCR)](https://github.com/users/TheCatLady/packages/container/package/qnap-pushover) and [Docker Hub](https://hub.docker.com/r/thecatlady/qnap-pushover).
 
 ```bash
 git clone https://github.com/TheCatLady/docker-qnap-pushover.git
 cd docker-qnap-pushover
-docker build \
-  --no-cache \
-  --pull \
-  -t thecatlady/qnap-pushover .
-docker volume create qnap-pushover
-docker run -d \
-  --name=qnap-pushover \
-  -e TZ=America/New_York `#optional` \
-  -e LOG_LEVEL=WARN `#optional` \
-  -e NOTIFY_LEVEL=WARN `#optional` \
-  -e POLL_INTERVAL=10 `#optional` \
-  -e TESTING_MODE=false `#optional` \
-  -e PUSHOVER_TOKEN=<Pushover application API token> \
-  -e PUSHOVER_RECIPIENT=<Pushover user and/or group key(s)> \
-  -v qnap-pushover:/data \
-  -v /etc/logs/event.log:/event.log:ro \
-  --restart always \
-  thecatlady/qnap-pushover
+docker build --no-cache --pull -t thecatlady/qnap-pushover .
 ```
+
+Once the image has been built, follow the directions in the "Usage" section above to start the container.
 
 ## How to Contribute
 
