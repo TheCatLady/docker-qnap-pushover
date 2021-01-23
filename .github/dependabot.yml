@@ -1,23 +1,26 @@
 version: 2
+
 updates:
-  - package-ecosystem: "docker"
-    directory: "/"
+  - package-ecosystem: docker
+    directory: /
     schedule:
-      interval: "daily"
+      interval: daily
     labels:
-      - "🧩 dependencies"
-      - "🤖 bot"
-  - package-ecosystem: "pip"
-    directory: "/"
+      - 🧩 dependencies
+      - 🤖 bot
+
+  - package-ecosystem: pip
+    directory: /
     schedule:
-      interval: "daily"
+      interval: daily
     labels:
-      - "🧩 dependencies"
-      - "🤖 bot"
-  - package-ecosystem: "github-actions"
-    directory: "/"
+      - 🧩 dependencies
+      - 🤖 bot
+
+  - package-ecosystem: github-actions
+    directory: /
     schedule:
-      interval: "daily"
+      interval: daily
     labels:
-      - "🧩 dependencies"
-      - "🤖 bot"
+      - 🧩 dependencies
+      - 🤖 bot

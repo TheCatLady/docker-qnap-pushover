@@ -1,17 +1,15 @@
 # `qnap-pushover` &#x1F514;
 
+[![Image Size](https://img.shields.io/docker/image-size/thecatlady/qnap-pushover/latest?style=flat-square&logoColor=white&logo=docker&label=image%20size)](https://hub.docker.com/r/thecatlady/qnap-pushover)
+[![Last Commit](https://img.shields.io/github/last-commit/TheCatLady/docker-qnap-pushover?style=flat-square&logoColor=white&logo=github)](https://github.com/TheCatLady/docker-qnap-pushover)
+[![Build Status](https://img.shields.io/github/workflow/status/TheCatLady/docker-qnap-pushover/Build%20Docker%20Images?style=flat-square&logoColor=white&logo=github%20actions)](https://github.com/TheCatLady/docker-qnap-pushover)<br/>
 [![Python](https://img.shields.io/github/languages/top/TheCatLady/docker-qnap-pushover?style=flat-square&logoColor=white&logo=python)](https://github.com/TheCatLady/docker-qnap-pushover)
 [![Code Quality](https://img.shields.io/lgtm/grade/python/github/TheCatLady/docker-qnap-pushover?style=flat-square&logoColor=white&logo=lgtm&label=code%20quality)](https://lgtm.com/projects/g/TheCatLady/docker-qnap-pushover/)
-[![Image Size](https://img.shields.io/docker/image-size/thecatlady/qnap-pushover/latest?style=flat-square&logoColor=white&logo=docker&label=image%20size)](https://hub.docker.com/r/thecatlady/qnap-pushover)
-[![Docker Hub Pulls](https://img.shields.io/docker/pulls/thecatlady/qnap-pushover?style=flat-square&logoColor=white&logo=docker&label=docker%20hub%20pulls)](https://hub.docker.com/r/thecatlady/qnap-pushover)<br/>
-[![Last Commit](https://img.shields.io/github/last-commit/TheCatLady/docker-qnap-pushover?style=flat-square&logoColor=white&logo=git)](https://github.com/TheCatLady/docker-qnap-pushover)
-[![GitHub Container Registry Build Status](https://img.shields.io/github/workflow/status/TheCatLady/docker-qnap-pushover/Docker?style=flat-square&logoColor=white&logo=github&label=github%20container%20registry%20build)](https://github.com/TheCatLady/docker-qnap-pushover)
-[![Docker Hub Build Status](https://img.shields.io/docker/cloud/build/thecatlady/qnap-pushover?style=flat-square&logoColor=white&logo=docker&label=docker%20hub%20build)](https://hub.docker.com/r/thecatlady/qnap-pushover)<br/>
-[![License](https://img.shields.io/github/license/TheCatLady/docker-qnap-pushover?style=flat-square&logoColor=white&logo=open%20source%20initiative)](https://github.com/TheCatLady/docker-qnap-pushover/blob/main/LICENSE)
+[![License](https://img.shields.io/github/license/TheCatLady/docker-qnap-pushover?style=flat-square&logoColor=white&logo=open%20source%20initiative)](https://github.com/TheCatLady/docker-qnap-pushover/blob/main/LICENSE)<br/>
 [![Become a GitHub Sponsor](https://img.shields.io/badge/github%20sponsors-become%20a%20sponsor-ff69b4?style=flat-square&logo=github%20sponsors)](https://github.com/sponsors/TheCatLady)
 [![Donate via PayPal](https://img.shields.io/badge/paypal-make%20a%20donation-blue?style=flat-square&logo=paypal)](http://paypal.me/DHoung)
 
-[Pushover](https://pushover.net/) notifications for [QNAP](https://www.qnap.com/) NAS system events via [`python-pushover`](https://github.com/Thibauth/python-pushover)
+[Pushover](https://pushover.net/) notifications for [QNAP](https://www.qnap.com/) NAS system events
 
 ## Usage
 
