@@ -29,9 +29,9 @@ services:
     image: thecatlady/qnap-pushover
     container_name: qnap-pushover
     environment:
-      - TZ=America/New_York #optional
       - LOG_LEVEL=WARN #optional
       - NOTIFY_LEVEL=WARN #optional
+      - NOTIFY_ONLY= #optional
       - POLL_INTERVAL=10 #optional
       - INCLUDE= #optional
       - EXCLUDE= #optional
@@ -63,9 +63,9 @@ Then, run the following command to create the container:
 ```bash
 docker run -d \
   --name=qnap-pushover \
-  -e TZ=America/New_York `#optional` \
   -e LOG_LEVEL=WARN `#optional` \
   -e NOTIFY_LEVEL=WARN `#optional` \
+  -e NOTIFY_ONLY= `#optional` \
   -e POLL_INTERVAL=10 `#optional` \
   -e INCLUDE= `#optional` \
   -e EXCLUDE= `#optional` \
@@ -109,9 +109,9 @@ The container image is configured using the following parameters passed at runti
 
 |Parameter|Function|Default Value|Required?|
 |---|---|---|---|
-|`-e TZ=`|[TZ database name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) of NAS time zone; e.g., `America/New_York`||no|
-|`-e LOG_LEVEL=`|Container logging level; `DEBUG` < `INFO` < `WARN` < `ERROR` < `CRITICAL`|`WARN`|no|
-|`-e NOTIFY_LEVEL=`|Minimum system event type to generate a notification; `INFO` < `WARN` < `ERROR`|`WARN`|no|
+|`-e LOG_LEVEL=`|Container logging level; `DEBUG` < `INFO` < `WARNING` < `ERROR` < `CRITICAL`|`WARNING`|no|
+|`-e NOTIFY_LEVEL=`|Minimum system event type to generate a notification; `INFO` < `WARNING` < `ERROR`|`WARNING`|no|
+|`-e NOTIFY_ONLY=`|Set of system event types for which to generate a notification (comma-delimited), e.g. `INFO,ERROR`<br/>(Value is ignored if `NOTIFY_LEVEL` is also set)||no|
 |`-e POLL_INTERVAL=`|Poll interval in seconds|`10`|no|
 |`-e INCLUDE=`|List of keywords which _must_ be present in the event description to trigger a notification (comma-delimited)||no|
 |`-e EXCLUDE=`|List of keywords which _must not_ be present in the event description to trigger a notification (comma-delimited)||no|

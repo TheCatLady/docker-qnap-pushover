@@ -9,13 +9,20 @@ import time
 EVENT_LOG_PATH = "/event.log"
 EVENT_ID_PATH = "/data/last_event_id.txt"
 FONT_COLOR = ["grey", "#ffc311", "#ca414b"]
-
+NOTIFY_LEVEL = {
+    'error': 2,
+    'warn': 1,
+    'warning': 1,
+    'info': 0,
+    'information': 0
+}
 LOGGING_LEVEL = {
     'critical': logging.CRITICAL,
     'error': logging.ERROR,
     'warn': logging.WARNING,
     'warning': logging.WARNING,
     'info': logging.INFO,
+    'information': logging.INFO,
     'debug': logging.DEBUG
 }
 
@@ -31,36 +38,42 @@ https://github.com/TheCatLady/docker-qnap-pushover
 logging_level = LOGGING_LEVEL.get(os.environ['LOG_LEVEL'].lower())
 
 if logging_level is None:
-    logging_level = logging.WARNING
+    logging_level = logging.INFO
 
 logging.basicConfig(format="%(levelname)s: %(message)s", level=logging_level)
 
+NOTIFY_LEVEL_NAME = {value: key.upper() for key, value in NOTIFY_LEVEL.items()}
+
 try:
-    if "info" in os.environ['NOTIFY_LEVEL'].lower():
-        NOTIFY_TYPE = 0
-    elif "warn" in os.environ['NOTIFY_LEVEL'].lower():
-        NOTIFY_TYPE = 1
-    else:
-        NOTIFY_TYPE = 2
+    notify_levels = dict()
+    
+    for level in filter(str.strip, os.environ['NOTIFY_ONLY'].lower().split(',')):
+        notify_levels[NOTIFY_LEVEL[level]] = NOTIFY_LEVEL_NAME[NOTIFY_LEVEL[level]]
 except Exception:
-    NOTIFY_TYPE = 1
+    notify_levels.clear()
+    logging.debug("NOTIFY_ONLY is not set.")
+
+try:
+    min_level = NOTIFY_LEVEL[os.environ['NOTIFY_LEVEL'].lower().strip()]
+    if len(notify_levels) > 0:
+        notify_levels.clear()
+        logging.warning("Both NOTIFY_ONLY and NOTIFY_LEVEL are set. Ignoring NOTIFY_ONLY.")
+except Exception:
+    min_level = 1
 finally:
-    if NOTIFY_TYPE == 0:
-        logging.info("NOTIFY_LEVEL is set to INFO. " \
-              "Sending notifications for INFO, WARN, and ERROR system log events (all event types).")
-    elif NOTIFY_TYPE == 1:
-        logging.info("NOTIFY_LEVEL is set to WARN. " \
-              "Sending notifications only for WARN and ERROR system log events; INFO events will not trigger notifications.")
-    else:
-        logging.info("NOTIFY_LEVEL is set to ERROR. " \
-              "Sending notifications only for ERROR system log events; INFO and WARN events will not trigger notifications.")
+    if len(notify_levels) == 0:
+        for level in range(min_level, 3):
+            notify_levels[level] = NOTIFY_LEVEL_NAME[level]
+
+for level_name in notify_levels.values():
+    logging.info(f"Sending notifications for {level_name} system log events.")
 
 try:
     POLL_INTERVAL = int(os.environ['POLL_INTERVAL'])
 except Exception:
     POLL_INTERVAL = 10
 finally:
-    logging.info(f"Poll interval is set to {POLL_INTERVAL} seconds.")
+    logging.info(f"Polling for new system log events every {POLL_INTERVAL} seconds.")
 
 try:
     INCLUDE = list(filter(str.strip, os.environ['INCLUDE'].lower().split(',')))
@@ -70,7 +83,7 @@ finally:
     if len(INCLUDE) > 0:
         logging.info(f"Only system log events containing the following keywords will trigger notifications: {', '.join(INCLUDE)}")
     else:
-        logging.info("INCLUDE keyword filter is not set.")
+        logging.debug("INCLUDE keyword filter is not set.")
 
 try:
     EXCLUDE = list(filter(str.strip, os.environ['EXCLUDE'].lower().split(',')))
@@ -80,7 +93,7 @@ finally:
     if len(EXCLUDE) > 0:
         logging.info(f"System log events containing the following keywords will not trigger notifications: {', '.join(EXCLUDE)}")
     else:
-        logging.info("EXCLUDE keyword filter is not set.")
+        logging.debug("EXCLUDE keyword filter is not set.")
 
 try:
     TESTING_MODE = bool(os.getenv('TESTING_MODE', 'false').lower().strip() in ['true', '1'])
@@ -90,7 +103,7 @@ finally:
     if TESTING_MODE:
         logging.warning("Testing mode is enabled. The last 10 system log events will be re-queued for processing on EVERY container start.")
     else:
-        logging.info("Testing mode is not enabled.")
+        logging.debug("Testing mode is not enabled.")
 
 try:
     PUSHOVER_TOKEN = os.environ['PUSHOVER_TOKEN'].strip()
@@ -140,7 +153,7 @@ try:
                     event_user = event[4]
                     event_ip = event[5]
 
-                    if event_type >= NOTIFY_TYPE:
+                    if event_type in notify_levels.keys():
                         hasIncluded = False
                         hasExcluded = False
 
@@ -216,6 +229,8 @@ try:
                             if pushover_answer["status"] != 1:
                                 time.sleep(5) # wait an extra 5 seconds
                                 raise Exception("Unable to connect to Pushover API.")
+                    else:
+                        logging.debug(f"Skipping system log event because it is of type {NOTIFY_LEVEL_NAME[event_type]}.")
 
                 last_event_id = newest_event_id
                 logging.info(f"Successfully processed {new_event_count} system log events.")
@@ -231,12 +246,12 @@ try:
                       f"Only {i} of {new_event_count} new system log events were processed successfully. " \
                       f"Re-queuing the remaining {new_event_count - i} unprocessed events.")
         else:
-            logging.info(f"No new system log events detected in {EVENT_LOG_PATH}.")
+            logging.debug(f"No new system log events detected in {EVENT_LOG_PATH}.")
 
         with open(EVENT_ID_PATH, "w+") as f:
             f.write(str(last_event_id))
             f.truncate()
-            logging.info(f"Wrote the last-processed event ID to the data file. ({last_event_id})")
+            logging.debug(f"Wrote the last-processed event ID to the data file. ({last_event_id})")
 
         time.sleep(POLL_INTERVAL)
 except (pushover.InitError, pushover.UserError):
