@@ -1,4 +1,4 @@
-FROM        python:3.9.1-alpine3.12
+FROM        python:3.9.1-alpine3.13
 COPY        requirements.txt /
 RUN         pip install -r requirements.txt && \
             rm -f requirements.txt && \
