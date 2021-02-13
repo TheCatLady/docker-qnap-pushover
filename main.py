@@ -195,7 +195,7 @@ try:
                                             message = f"<font color=\"{FONT_COLOR[event_type]}\"><b>{prev}{s}</b></font><small>";
                                             first_line = False
                                         else:
-                                            message += f"<br/>{prev}{s}"
+                                            message += f"\n{prev}{s}"
 
                                         prev = ""
                                         quotes = 0
@@ -207,16 +207,16 @@ try:
                             message_details = ""
 
                             if event_user != "System":
-                                message_details += f"<b>{event_user}</b><small><br/>User"
+                                message_details += f"<b>{event_user}</b><small>\nUser"
 
                             if event_ip != "127.0.0.1":
                                 if message_details != "":
-                                    message_details += "<br/>&nbsp;\n</small>"
+                                    message_details += "\n\n</small>"
 
-                                message_details += f"<b>{event_ip}</b><small><br/>Source IP"
+                                message_details += f"<b>{event_ip}</b><small>\nSource IP"
 
                             if message_details != "":
-                                message += f"<br/>&nbsp;\n{message_details}</small></small>"
+                                message += f"\n\n{message_details}</small></small>"
                             else:
                                 message += "</small>"
 
