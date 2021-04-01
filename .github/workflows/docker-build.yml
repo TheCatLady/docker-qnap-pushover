@@ -30,22 +30,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
-      - name: Set Docker image metadata
-        id: docker_meta
-        uses: crazy-max/ghaction-docker-meta@v1
-        with:
-          images: thecatlady/qnap-pushover,ghcr.io/thecatlady/qnap-pushover
-          tag-custom-only: true
-          tag-custom: |
-            latest
-          label-custom: |
-            maintainer=TheCatLady
-            org.opencontainers.image.title=qnap-pushover
-            org.opencontainers.image.description=Pushover notifications for QNAP NAS system events
-            org.opencontainers.image.url=https://github.com/TheCatLady/docker-qnap-pushover
-            org.opencontainers.image.documentation=https://github.com/TheCatLady/docker-qnap-pushover
-            org.opencontainers.image.source=https://github.com/TheCatLady/docker-qnap-pushover
-
       - name: Log in to Docker Hub
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v1
@@ -69,8 +53,9 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.docker_meta.outputs.tags }}
-          labels: ${{ steps.docker_meta.outputs.labels }}
+          tags: |
+            thecatlady/qnap-pushover:latest
+            ghcr.io/thecatlady/qnap-pushover:latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
