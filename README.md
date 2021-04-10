@@ -29,6 +29,7 @@ services:
     image: thecatlady/qnap-pushover
     container_name: qnap-pushover
     environment:
+      - TZ=America/New_York #optional
       - LOG_LEVEL=WARN #optional
       - NOTIFY_LEVEL=WARN #optional
       - NOTIFY_ONLY= #optional
@@ -63,6 +64,7 @@ Then, run the following command to create the container:
 ```bash
 docker run -d \
   --name=qnap-pushover \
+  -e TZ=America/New_York `#optional` \
   -e LOG_LEVEL=WARN `#optional` \
   -e NOTIFY_LEVEL=WARN `#optional` \
   -e NOTIFY_ONLY= `#optional` \
@@ -107,20 +109,21 @@ docker image prune
 
 The container image is configured using the following parameters passed at runtime:
 
-|Parameter|Function|Default Value|Required?|
-|---|---|---|---|
-|`-e LOG_LEVEL=`|Container logging level; `DEBUG` < `INFO` < `WARNING` < `ERROR` < `CRITICAL`|`WARNING`|no|
-|`-e NOTIFY_LEVEL=`|Minimum system event type to generate a notification; `INFO` < `WARNING` < `ERROR`|`WARNING`|no|
-|`-e NOTIFY_ONLY=`|Set of system event types for which to generate a notification (comma-delimited), e.g. `INFO,ERROR`<br/>(Value is ignored if `NOTIFY_LEVEL` is also set)||no|
-|`-e POLL_INTERVAL=`|Poll interval in seconds|`10`|no|
-|`-e INCLUDE=`|List of keywords which _must_ be present in the event description to trigger a notification (comma-delimited)||no|
-|`-e EXCLUDE=`|List of keywords which _must not_ be present in the event description to trigger a notification (comma-delimited)||no|
-|`-e TESTING_MODE=`|Testing mode (`true` or `false`); if set to `true`, will re-queue the last 10 system log events at _every_ container start and result in duplicate notifications|`false`|no|
-|`-e PUSHOVER_TOKEN=`|[Pushover application API token](https://pushover.net/api#registration); e.g., `azGDORePK8gMaC0QOYAMyEEuzJnyUi`||**yes**|
-|`-e PUSHOVER_RECIPIENT=`|[Pushover user and/or group key(s)](https://pushover.net/api#identifiers); e.g., `uQiRzpo4DXghDmr9QzzfQu27cmVRsG` or `gznej3rKEVAvPUxu9vvNnqpmZpokzF` (up to 50, comma-delimited)||**yes**|
-|`-v qnap-pushover:/data`|Container data volume||**yes**|
-|`-v /etc/logs/event.log:/event.log:ro`|QNAP event logs (mounted as read-only)||**yes**|
-|`--restart`|Container [restart policy](https://docs.docker.com/engine/reference/run/#restart-policies---restart) (`always` or `unless-stopped` recommended)|`no`|no|
+| Parameter                              | Function                                                                                                                                                                          | Default Value | Required? |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | --------- |
+| `-e TZ=`                               | [TZ database name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) of system time zone; e.g., `America/New_York`                                                    | `Etc/UTC`     | no        |
+| `-e LOG_LEVEL=`                        | Container logging level; `DEBUG` < `INFO` < `WARNING` < `ERROR` < `CRITICAL`                                                                                                      | `WARNING`     | no        |
+| `-e NOTIFY_LEVEL=`                     | Minimum system event type to generate a notification; `INFO` < `WARNING` < `ERROR`                                                                                                | `WARNING`     | no        |
+| `-e NOTIFY_ONLY=`                      | Set of system event types for which to generate a notification (comma-delimited), e.g. `INFO,ERROR`<br/>(Value is ignored if `NOTIFY_LEVEL` is also set)                          |               | no        |
+| `-e POLL_INTERVAL=`                    | Poll interval in seconds                                                                                                                                                          | `10`          | no        |
+| `-e INCLUDE=`                          | List of keywords which _must_ be present in the event description to trigger a notification (comma-delimited)                                                                     |               | no        |
+| `-e EXCLUDE=`                          | List of keywords which _must not_ be present in the event description to trigger a notification (comma-delimited)                                                                 |               | no        |
+| `-e TESTING_MODE=`                     | Testing mode (`true` or `false`); if set to `true`, will re-queue the last 10 system log events at _every_ container start and result in duplicate notifications                  | `false`       | no        |
+| `-e PUSHOVER_TOKEN=`                   | [Pushover application API token](https://pushover.net/api#registration); e.g., `azGDORePK8gMaC0QOYAMyEEuzJnyUi`                                                                   |               | **yes**   |
+| `-e PUSHOVER_RECIPIENT=`               | [Pushover user and/or group key(s)](https://pushover.net/api#identifiers); e.g., `uQiRzpo4DXghDmr9QzzfQu27cmVRsG` or `gznej3rKEVAvPUxu9vvNnqpmZpokzF` (up to 50, comma-delimited) |               | **yes**   |
+| `-v qnap-pushover:/data`               | Container data volume                                                                                                                                                             |               | **yes**   |
+| `-v /etc/logs/event.log:/event.log:ro` | QNAP event logs (mounted as read-only)                                                                                                                                            |               | **yes**   |
+| `--restart`                            | Container [restart policy](https://docs.docker.com/engine/reference/run/#restart-policies---restart) (`always` or `unless-stopped` recommended)                                   | `no`          | no        |
 
 ## Building Locally
 
@@ -136,6 +139,6 @@ Once the image has been built, follow the directions in the "Usage" section abov
 
 ## How to Contribute
 
-Show your support by starring this project! &#x1F31F;  Pull requests, bug reports, and feature requests are also welcome!
+Show your support by starring this project! &#x1F31F; Pull requests, bug reports, and feature requests are also welcome!
 
 You can also support me by [becoming a GitHub sponsor](https://github.com/sponsors/TheCatLady) or [making a one-time PayPal donation](http://paypal.me/DHoung) &#x1F496;
