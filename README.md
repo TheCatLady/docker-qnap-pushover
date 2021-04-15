@@ -6,8 +6,7 @@
 [![Python](https://img.shields.io/github/languages/top/TheCatLady/docker-qnap-pushover?style=flat-square&logoColor=white&logo=python)](https://github.com/TheCatLady/docker-qnap-pushover)
 [![Code Quality](https://img.shields.io/lgtm/grade/python/github/TheCatLady/docker-qnap-pushover?style=flat-square&logoColor=white&logo=lgtm&label=code%20quality)](https://lgtm.com/projects/g/TheCatLady/docker-qnap-pushover/)
 [![License](https://img.shields.io/github/license/TheCatLady/docker-qnap-pushover?style=flat-square&logoColor=white&logo=open%20source%20initiative)](https://github.com/TheCatLady/docker-qnap-pushover/blob/main/LICENSE)<br/>
-[![Become a GitHub Sponsor](https://img.shields.io/badge/github%20sponsors-become%20a%20sponsor-ff69b4?style=flat-square&logo=github%20sponsors)](https://github.com/sponsors/TheCatLady)
-[![Donate via PayPal](https://img.shields.io/badge/paypal-make%20a%20donation-blue?style=flat-square&logo=paypal)](http://paypal.me/DHoung)
+[![Become a GitHub Sponsor](https://img.shields.io/badge/github%20sponsors-help%20feed%20my%20cats!-ff69b4?style=flat-square&logo=github%20sponsors)](https://github.com/sponsors/TheCatLady)
 
 [Pushover](https://pushover.net/) notifications for [QNAP](https://www.qnap.com/) NAS system events
 
@@ -141,4 +140,4 @@ Once the image has been built, follow the directions in the "Usage" section abov
 
 Show your support by starring this project! &#x1F31F; Pull requests, bug reports, and feature requests are also welcome!
 
-You can also support me by [becoming a GitHub sponsor](https://github.com/sponsors/TheCatLady) or [making a one-time PayPal donation](http://paypal.me/DHoung) &#x1F496;
+You can also support me by [becoming a GitHub sponsor](https://github.com/sponsors/TheCatLady) or [making a one-time donation](https://github.com/sponsors/TheCatLady?frequency=one-time) &#x1F496;
