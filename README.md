@@ -5,7 +5,6 @@
 [![Build Status](https://img.shields.io/github/workflow/status/TheCatLady/docker-qnap-pushover/Build%20Docker%20Images?style=flat-square&logoColor=white&logo=github%20actions)](https://github.com/TheCatLady/docker-qnap-pushover)<br/>
 [![Python](https://img.shields.io/github/languages/top/TheCatLady/docker-qnap-pushover?style=flat-square&logoColor=white&logo=python)](https://github.com/TheCatLady/docker-qnap-pushover)
 [![Code Quality](https://img.shields.io/lgtm/grade/python/github/TheCatLady/docker-qnap-pushover?style=flat-square&logoColor=white&logo=lgtm&label=code%20quality)](https://lgtm.com/projects/g/TheCatLady/docker-qnap-pushover/)
-[![License](https://img.shields.io/github/license/TheCatLady/docker-qnap-pushover?style=flat-square&logoColor=white&logo=open%20source%20initiative)](https://github.com/TheCatLady/docker-qnap-pushover/blob/main/LICENSE)<br/>
 [![Become a GitHub Sponsor](https://img.shields.io/badge/github%20sponsors-help%20feed%20my%20cats!-ff69b4?style=flat-square&logo=github%20sponsors)](https://github.com/sponsors/TheCatLady)
 
 [Pushover](https://pushover.net/) notifications for [QNAP](https://www.qnap.com/) NAS system events
