@@ -2,5 +2,5 @@ certifi==2021.10.8
 chardet==4.0.0
 idna==3.3
 python-pushover==0.4
-requests==2.27.0
+requests==2.27.1
 urllib3==1.26.7
