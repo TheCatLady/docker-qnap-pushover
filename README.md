@@ -1,3 +1,9 @@
+# Update (February 2, 2022)
+
+Hi folks—I am not running QTS on my QNAP NAS anymore, and thus unfortunately am no longer able to test/maintain this project.
+
+I am archiving this repository, but please feel free to fork and continue improving on it!
+
 # `qnap-pushover` &#x1F514;
 
 [![Image Size](https://img.shields.io/docker/image-size/thecatlady/qnap-pushover/latest?style=flat-square&logoColor=white&logo=docker&label=image%20size)](https://hub.docker.com/r/thecatlady/qnap-pushover)
